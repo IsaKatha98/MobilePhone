@@ -13,6 +13,8 @@ import com.example.highscore.Entities.PodioEntity
 @Dao
 interface PodioDao {
 
+    //suspend indica que son funciones que necesitan runBlocking(multitarea).
+
     // Función que devuelve todas las tareas de la base de datos en una lista Mutable.
     @Query("SELECT * FROM podio_entity")
     suspend fun getAllPodio(): MutableList<PodioEntity>
@@ -23,16 +25,19 @@ interface PodioDao {
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     suspend fun addPodio(podioEntity : PodioEntity):Long
 
-    // Función que busca un registro concreto por id (debe ser Long, no Int)
+    // Función que busca un registro concreto por id (debe ser Long, no Int),
+    //devuelve una entidad
 
-    @Query("SELECT * FROM podio_entity where id like :id")
-    suspend fun getPodioById(id: Long): PodioEntity
+    @Query("SELECT * FROM podio_entity where userName like :userName")
+    suspend fun getPodioById(userName: String): PodioEntity
 
     // Función que actualiza un registro del podio
+    //devuelve un booleano de confirmación
     @Update
-    suspend fun updatePodio (podio: PodioEntity):Int
+    suspend fun updatePodio (podio: PodioEntity):Boolean
 
-    //Función que elimina un registro del podio
+    //Función que elimina un registro del podio,
+    //devuelve un booleano de confirmación.
     @Delete
-    suspend fun deletePodio (podio: PodioEntity):Int
+    suspend fun deletePodio (podio: PodioEntity):Boolean
 }

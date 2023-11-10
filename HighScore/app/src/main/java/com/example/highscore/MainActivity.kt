@@ -51,12 +51,20 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
 import com.example.highscore.Entities.PodioEntity
 import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
+
+    val dao= PodioViewModel.database.podioDao()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+       //No vamos a llamar a la tabla aquí porque está vacia.
+        // Tenemos que añadirlo cuando alguien haga un login.
+        PodioViewModel.database= Room.databaseBuilder(this, PodioDatabase::class.java,"podio-db").build()
+
         setContent {
             HighScoreTheme {
                 // A surface container using the 'background' color from the theme
@@ -70,8 +78,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-
 
 }
 
@@ -105,7 +111,7 @@ fun navPantallas() {
 @Composable
 fun login( modifier: Modifier = Modifier, navController: NavController) {
 
-    var userName by remember { mutableStateOf(TextFieldValue()) }
+    var userName by remember { mutableStateOf(TextFieldValue("Nombre de usuario: ")) }
     var password by remember { mutableStateOf(TextFieldValue()) }
 
     Column(
@@ -131,9 +137,9 @@ fun login( modifier: Modifier = Modifier, navController: NavController) {
                 .height(50.dp),
             value = userName,
             onValueChange = { userName = it },
-            label = { Text("Nombre de usuario: ") }
 
-            //TODO: aquí debería comprobarse si el usuario existe, y si no, hacer un registro nuevo.
+            //Asignamos el valor del label a la variable userName.
+            label = { Text("$userName") }
 
         )
 
@@ -154,6 +160,14 @@ fun login( modifier: Modifier = Modifier, navController: NavController) {
             onClick = { navController.navigate("juego")}) {
 
             Text("Go")
+
+            //TODO: aquí debería comprobarse si el usuario existe, y si no, hacer un registro nuevo.
+
+            //Creamos una entidad y le añadimos los datos
+            //Llamamos a la función correspondiente.
+            //Devuelve una entidad (objeto) que llamaremos jugador
+           var jugador= nuevoJugador(entity = PodioEntity(), userName.toString())
+
         }
     }
 }
@@ -208,7 +222,7 @@ fun juego(modifier: Modifier = Modifier, navController:NavController) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                 Text(
-                    text = "Jugador",
+                    text = "$userName",
                     modifier = Modifier.padding(24.dp),
                     fontSize = 24.sp,
                     fontWeight = Bold
@@ -421,9 +435,10 @@ fun tiradaMaquina(): String {
  * @param navController para cambiar de pantalla.
  */
 @Composable
-fun podio (navController:NavController) {
+fun podio (navController:NavController, String: userName) {
 
     //Declaración de variables
+
     var jugador = remember { mutableStateOf("") }//Guarda la tirada del jugador
     var maquina = remember { mutableStateOf("") }//Guarda la tirada de la máquina
     var puntosJugador = remember { mutableStateOf(0) }//Guarda los puntos del jugador
@@ -449,9 +464,11 @@ fun podio (navController:NavController) {
         //TODO: aquí van las cosas de la base de datos. Hay que insertar los valores de maxPuntuación y numPartidas.
         Column (modifier= Modifier.weight(2F)) {
 
-            var entity= PodioEntity()
 
-            actualizaPodio(entity, dao = PodioDao) {}
+
+
+
+           // actualizaPodio(entity,) {}
 
         }
 
@@ -464,6 +481,10 @@ fun podio (navController:NavController) {
                 onClick = { navController.navigate("juego")}) {
 
                 Text("Volver a jugar", fontSize = 30.sp)
+
+                //Llamamos a la función nuevoJugador, para que actualize el numPartidas de
+                //ese jugador.
+                nuevoJugador(entity = PodioEntity(), userName.toString())
 
                 //Ponemos los valores a 0.
                 puntosJugador.value=0
@@ -487,18 +508,57 @@ fun podio (navController:NavController) {
 }
 
 /**
+ * Función que comprueba si ese userName ya existen en la badat; y si no,
+ * crea una nueva. Devuelve una entidad, vamos a hacer dos return pero gueno.
+ */
+fun nuevoJugador (nombre: String): PodioEntity {
+
+    runBlocking {
+
+        val dao= PodioViewModel.database.podioDao()
+
+        val entity= dao.getPodioById(nombre)
+
+       
+
+
+        //Creamos un usuario nuevo.
+        if (entity!=null) {
+
+            entity.userName= nombre
+            entity.maxPuntuacion=0
+            entity.numPartidas=1
+
+            dao.addPodio(entity)
+
+        //Si ya existe ese jugador, actualizamos su contador de jugadas.
+        } else {
+
+            entity.numPartidas++
+
+            dao.updatePodio(entity)
+        }
+
+    }
+
+    return entity
+}
+
+
+/**
  * Función que actualiza la base de datos a través del dao.
  *
  * @param entity recibe una entidad (un objeto)
  * @param dao se conecta con el dao.
  */
-fun actualizaPodio(entity: PodioEntity, dao: PodioDao) {
+fun actualizaPodio(entity: PodioEntity) {
 
     //Comprueba si ya existe el id y si la puntuación es mejor.
     //runBlocking es una corrutina que separa la ejecución de la app
     //de la interacción con la base de datos.
     runBlocking {
 
+        val dao= PodioViewModel.database.podioDao()
         //Llamamos a una lista de puntuaciones.
         val puntuaciones=dao.getAllPodio()
 
