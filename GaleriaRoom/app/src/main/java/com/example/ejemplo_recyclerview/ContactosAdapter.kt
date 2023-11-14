@@ -1,32 +1,67 @@
 package com.example.ejemplo_recyclerview
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ejemplo_recyclerview.databinding.ItemContactoBinding
 
+/**
+ * Clase que contiene el viewHolder y su respectivo recyclerview
+ */
 class ContactosAdapter (
     val contactos: List<Contacto>,
 
     ): RecyclerView.Adapter<ContactosAdapter.ViewHolder>() {
 
-    class ViewHolder(val binding: ItemContactoBinding) : RecyclerView.ViewHolder(binding.root) {
+    /**
+     * Muestra la vista y cada contacto.
+     */
+    override fun onBindViewHolder(holder: ViewHolder, posicion: Int) {
 
-        fun bind(contacto: Contacto) {
+        val item= contactos[posicion]
+        holder.bind(item)
+    }
 
-            binding.nombre.text=contacto.name
+    /**
+     * Contenedor de la vista (holder)
+     */
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val layoutInflater =LayoutInflater.from(parent.context)                       // Se instancia el Layout para la vista
+        return ViewHolder(layoutInflater.inflate(R.layout.item_contacto, parent, false))
+    }
 
-            binding.tlf.text=contacto.tlf
+
+    override fun getItemCount(): Int {
+        return contactos.size
+    }
+
+
+    /**
+     * Clase que muestra el recyclerview.
+     */
+    class ViewHolder(val binding: View) : RecyclerView.ViewHolder(binding) {
+
+        //instancia la vista del contacto
+        var tvContacto=binding.findViewById<TextView>(R.id.nombre)
+        var tlf=binding.findViewById<TextView>(R.id.tlf)
+        var foto=binding.findViewById<ImageView>(R.id.fotoContacto)
+
+
+        fun bind(contacto: Contacto) { //hace referencia a la entidad
+
+            tvContacto.text=contacto.name
+            tlf.text=contacto.tlf
 
             //en caso de que el contacto sea mujer ponemos visible el icono
             if (contacto.gender=="mujer") {
-                binding.fotoContacto.setImageResource(R.drawable.mujer)
+                foto.setImageResource(R.drawable.mujer)
             } else {
-                binding.fotoContacto.setImageResource(R.drawable.hombre)
+                foto.setImageResource(R.drawable.hombre)
             }
 
 
@@ -34,23 +69,9 @@ class ContactosAdapter (
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
-            ItemContactoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
-        return ViewHolder(binding)
-    }
-
-    override fun getItemCount(): Int {
-        return contactos.size
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, posicion: Int) {
-        holder.bind(contactos[posicion])
 
 
 
 
 
-    }
 }
