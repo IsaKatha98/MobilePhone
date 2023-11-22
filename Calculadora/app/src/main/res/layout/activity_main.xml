@@ -42,7 +42,6 @@
         android:layout_marginBottom="25dp"
         android:ems="10"
         android:inputType="text"
-        android:text="User"
         android:textColor="#B6B6B6"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/tvPass"

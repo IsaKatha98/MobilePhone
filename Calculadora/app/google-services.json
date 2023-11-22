@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "511913205158",
+    "project_id": "login-e8290",
+    "storage_bucket": "login-e8290.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511913205158:android:4bc952530d224392104367",
+        "android_client_info": {
+          "package_name": "com.example.calculadorab"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG2oer3GtU8UUHBpmWBf80lvYK0v4oEu0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

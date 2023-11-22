@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.videos"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.videos"
         minSdk = 29
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -67,4 +67,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("com.google.android.exoplayer:exoplayer:2.15.1")
+
+    //Hay que implementar la siguiente librería.
+    implementation("com.google.android.exoplayer:exoplayer:2.16.1")
 }
