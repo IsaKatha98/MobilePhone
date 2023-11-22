@@ -24,7 +24,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="-1dp"
-            android:layout_toLeftOf="@+id/btnAddTask"
+            android:layout_toLeftOf="@+id/btnAddContacto"
             android:hint="Nombre contacto" />
 
         <EditText
@@ -34,7 +34,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="-1dp"
-            android:layout_toLeftOf="@+id/btnAddTask"
+            android:layout_toLeftOf="@+id/btnAddContacto"
             android:hint="Telefono"
             android:inputType="phone" />
 
@@ -45,12 +45,12 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="-1dp"
-            android:layout_toLeftOf="@+id/btnAddTask"
+            android:layout_toLeftOf="@+id/btnAddContacto"
             android:hint="Género contacto" />
 
 
         <Button
-            android:id="@+id/btnAddTask"
+            android:id="@+id/btnAddContacto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

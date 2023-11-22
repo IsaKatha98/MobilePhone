@@ -7,7 +7,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ejemplo_recyclerview.databinding.ContactosBinding
+import com.example.ejemplo_recyclerview.databinding.ItemContactoBinding
+import com.example.ejemplo_recyclerview.databinding.NuevoContactoBinding
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -20,8 +24,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Cargamos la vista que añade contactos.
-        setContentView(R.layout.contactos)
+        val vistaContactos=ContactosBinding.inflate(layoutInflater)
+        val vistaNuevoContacto=NuevoContactoBinding.inflate(layoutInflater)
+
+        //Cargamos la vista.
+        setContentView(vistaContactos.root)
 
         //Preparamos la lista.
         listaContactos=ArrayList()
@@ -29,45 +36,25 @@ class MainActivity : AppCompatActivity() {
         //Cargamos la lista a través del DAO.
         getAllContactos()
 
-        //Si clicamos en el botón.
-        findViewById<Button>(R.id.btnAddContacto).setOnClickListener(
+        //Hacemos un botón.
+        val btnNuevoContacto=vistaNuevoContacto.btnAddContacto
 
-            //Llamamos a la función que hace las cosas del boton.
-            cosasBoton()
-
-
-        )
-    }
-
-    private fun cosasBoton() {
-
-        //Cargamos la vista de nuevoContacto.
-        setContentView(R.layout.nuevo_contacto)
-
-        //Llamamos a la función que llama a la de añadir contactos del DAO.
-        //Le pasamos por parámetro por el nombre, el tlf, y el género.
-        addContacto(Contacto(
-           // nombre=findViewById<EditText>(R.id.etNombreContacto).text.toString()))
-
-    }
-
-    private fun addContacto(contacto: Contacto)= runBlocking {
-
-        launch {
-
-            var nombre= findViewById<EditText>(R.id.etNombreContacto).text.toString()
-            var tlf= findViewById<EditText>(R.id.etTlf).text.toString()
-            var genero= findViewById<EditText>(R.id.etGenero).text.toString()
-
-            //Pasamos el nombre como primary Key para indicar que añadimos un contacto nuevo
-            nombre= MisContactosApp.database.contactosDao().addContacto(contacto)
-            val recoveryContacto = MisContactosApp.database.contactosDao().getContactobyName(nombre)   // Recarga la lista
-
-            listaContactos.add(recoveryContacto) 
+        btnNuevoContacto.setOnClickListener{
+            //Cargamos la vista de nuevoContacto.
+            setContentView(vistaNuevoContacto.root)
         }
 
 
+
+
+
+
+
+
+
     }
+
+
 
     fun clearFocus(){
         findViewById<EditText>(R.id.etNombreContacto).setText("") // Borra el texto en el EditText
@@ -93,17 +80,22 @@ class MainActivity : AppCompatActivity() {
     /**
      * Función que muestra la vista del recyclerView
      */
-    private fun setUpRecyclerView(listaContactos: MutableList<Contacto>) {
+    private fun setUpRecyclerView(listaContactos: List<Contacto>) {
 
         //Asignamos el adaptador
         adapter= ContactosAdapter(listaContactos)
 
+        val vistaContactos= ContactosBinding.inflate(layoutInflater)
         //ASignamos la vista
-        recyclerView=findViewById(R.id.vistaContactos)
+        recyclerView=vistaContactos.rvContacto
         recyclerView.setHasFixedSize(true)
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         //Asignamos el adaptador a la vista.
         recyclerView.adapter=adapter
 
     }
 }
+
+
