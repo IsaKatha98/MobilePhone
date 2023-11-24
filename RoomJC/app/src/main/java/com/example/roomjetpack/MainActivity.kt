@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.room.Room
 import com.example.roomjetpack.Entities.Users
+import com.example.roomjetpack.Navigation.NavManager
 import com.example.roomjetpack.Room.UsersDatabase
 import com.example.roomjetpack.ViewModel.UserVM
 import com.example.roomjetpack.Views.AgregarView
@@ -35,60 +36,22 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //Construimos la base de datos.
-                   val database= Room.databaseBuilder(this, UsersDatabase::class.java, "users_database").build()
+                    //Construimos la base de datos
+                    val database = Room.databaseBuilder(this, UsersDatabase::class.java, "db_usuarios").build()
 
-                    //Instanciamos el dao.
-                    val dao=database.usersDAO()
+                    //Instanciamos el dao (data access object)
+                    val dao = database.usersDAO()
 
-                    //Instanciamos el viewModel.
-                    val viewModel=UserVM(dao)
+                    //Instanciamos el viewModel y le pasamos el dao por parámetros
+                    val viewModel = UserVM(dao)
 
-                    NavManager(viewModel=viewModel)
+
                 }
             }
         }
     }
 
-    class NavManager(viewModel: UserVM) {
 
-
-        @Composable
-//pasamos el vievModel por parametro.
-        fun navManager(vm: UserVM) {
-
-            val navController = rememberNavController()
-
-            NavHost(navController = navController, startDestination = "inicio") {
-                composable("inicio") {
-                    InicioView(navController, vm)
-                }
-                composable("agregar") {
-                    AgregarView(navController, vm)
-                }
-                //A esta vista hay que pasarle los datos del objeto, por lo que se lo pasamos
-                //con el navController.
-                composable(
-                    "editar/{id}/{userName}/{password}", arguments = listOf(
-                        navArgument("id") { type = NavType.IntType },
-                        navArgument("userName") { type = NavType.StringType },
-                        navArgument("password") { type = NavType.StringType },
-                    )
-                ) {
-
-                    //Aparte del navController y el viewModel, hay que pasarle los datos a la vista.
-                    //!!significa que no puede ser null ni vacío.
-                    //? significa que puede ser null o estar vacío.
-                    EditarView(
-                        navController, vm,
-                        it.arguments!!.getInt("id"),
-                        it.arguments?.getString("userName"),
-                        it.arguments?.getString("password")
-                    )
-                }
-            }
-        }
-    }
 }
 
 

@@ -14,33 +14,29 @@ import com.example.roomjetpack.Views.EditarView
 import com.example.roomjetpack.Views.InicioView
 
 @Composable
-//pasamos el vievModel por parametro.
-fun navManager(vm:UserVM){
+fun NavManager(viewModel: UserVM) {
 
-    val navController= rememberNavController()
+    val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "inicio" ) {
-        composable("inicio"){
-            InicioView(navController, vm)
+    NavHost(navController = navController, startDestination = "inicio") {
+        composable("inicio") {
+            InicioView(navController, viewModel)
         }
-        composable("agregar"){
-            AgregarView(navController, vm)
-        }
-        //A esta vista hay que pasarle los datos del objeto, por lo que se lo pasamos
-        //con el navController.
-        composable("editar/{id}/{userName}/{password}", arguments= listOf(
-            navArgument("id"){type=NavType.IntType},
-            navArgument("userName"){type=NavType.StringType},
-            navArgument("password"){type=NavType.StringType},
-            )){
 
-            //Aparte del navController y el viewModel, hay que pasarle los datos a la vista.
-            //!!significa que no puede ser null ni vacío.
-            //? significa que puede ser null o estar vacío.
-            EditarView(navController, vm,
+        composable("agregar") {
+            AgregarView(navController, viewModel)
+        }
+
+        composable("editar/{id}/{usuario}/{email}", arguments = listOf(
+            navArgument("id") { type = NavType.IntType },
+            navArgument("usuario") { type = NavType.StringType },
+            navArgument("email") { type = NavType.StringType }
+
+        )) {
+            EditarView(navController, viewModel,
                 it.arguments!!.getInt("id"),
-                it.arguments?.getString("userName"),
-                it.arguments?.getString("password"))
+                it.arguments?.getString("usuario"),
+                it.arguments?.getString("email"))
         }
     }
 }

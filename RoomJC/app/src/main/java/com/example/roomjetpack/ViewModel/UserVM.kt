@@ -14,10 +14,11 @@ import kotlinx.coroutines.launch
 class UserVM(
 
     //El viewmodel recibe el DAO.
-    //Es el encargado de conectar las vistas con el DAO.
+
     private val dao:UsersDao
 
     //Esta clase hereda de ViewModel
+    //Es el encargado de conectar las vistas con el DAO.
 ):ViewModel() {
 
     var state by mutableStateOf(UserState())

@@ -28,10 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.roomjetpack.ViewModel.UserVM
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 //Recibe por parámetros el navController para poder navegar entre las vistas.
 //y el viewModel para poder conectarse con el DAO.
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun InicioView(navController: NavController, vm: UserVM){
 
     //Vista predeterminada, esto se puede hacer con un modifier.
@@ -63,10 +63,6 @@ fun InicioView(navController: NavController, vm: UserVM){
         ContentInicioView(it, navController, vm)
 
     }
-}
-
-private infix fun Unit.fillMaxWidth(unit: Unit) {
-
 }
 
 @Composable
