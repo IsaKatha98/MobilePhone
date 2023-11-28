@@ -1,0 +1,8 @@
+mensaje
+	idMensaje(auto), mensaje string, timestamp horayFecha, idSender int, idReceiver int, Recibido 	bool, Visto bool, 
+
+Usuario 
+	autenticacion por google, idUsuario(auto), correo, nombre, contraseña,  fotoURl
+
+
+Hay que hacer varias vistas: pantalla login, pantalla Contactos, pantalla chats
